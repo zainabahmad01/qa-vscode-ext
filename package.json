@@ -1,0 +1,99 @@
+{
+  "name": "qa-super-agent",
+  "displayName": "QA Super Agent",
+  "description": "AI-powered QA test case generation, failure prediction, and code issue detection for Flutter, PHP & Node.js projects",
+  "version": "1.0.0",
+  "publisher": "qa-super-agent",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Testing", "Other"],
+  "keywords": ["qa", "testing", "flutter", "php", "nodejs", "ai", "test cases", "gemini", "test generation"],
+  "icon": "icon.png",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qa-super-agent/qa-super-agent"
+  },
+  "homepage": "https://github.com/qa-super-agent/qa-super-agent#readme",
+  "bugs": {
+    "url": "https://github.com/qa-super-agent/qa-super-agent/issues"
+  },
+  "galleryBanner": {
+    "color": "#0F172A",
+    "theme": "dark"
+  },
+  "activationEvents": ["onStartupFinished"],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "qa.generateTestCases",
+        "title": "QA: Generate Test Cases & Failure Analysis"
+      },
+      {
+        "command": "qa.changeApiKey",
+        "title": "QA: Set / Change Gemini API Key"
+      },
+      {
+        "command": "qa.clearApiKey",
+        "title": "QA: Clear Saved API Key"
+      },
+      {
+        "command": "qa.openSettings",
+        "title": "QA: Open Settings"
+      },
+      {
+        "command": "qa.showTutorial",
+        "title": "QA: Show Tutorial"
+      },
+      {
+        "command": "qa.viewSavedResults",
+        "title": "QA: View Saved Results"
+      },
+      {
+        "command": "qa.exportResult",
+        "title": "QA: Export Result to File"
+      },
+      {
+        "command": "qa.importResult",
+        "title": "QA: Import Result from File"
+      }
+    ],
+    "configuration": {
+      "title": "QA Super Agent",
+      "properties": {
+        "qaAgent.serverUrl": {
+          "type": "string",
+          "default": "http://localhost:8000",
+          "description": "QA Super Agent backend server URL"
+        },
+        "qaAgent.model": {
+          "type": "string",
+          "default": "gemini-2.0-flash",
+          "description": "Gemini model to use"
+        }
+      }
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "qa.generateTestCases",
+          "when": "editorHasSelection",
+          "group": "qa@1"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "qa.generateTestCases",
+        "key": "ctrl+shift+q",
+        "mac": "cmd+shift+q"
+      }
+    ]
+  },
+  "scripts": {
+    "package": "vsce package --allow-missing-repository --skip-license --allow-package-all-secrets"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.6.1"
+  }
+}
