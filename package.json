@@ -2,11 +2,26 @@
   "name": "qa-super-agent",
   "displayName": "QA Super Agent",
   "description": "AI-powered QA test case generation, failure prediction, and code issue detection for Flutter, PHP & Node.js projects",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "qa-super-agent",
-  "engines": { "vscode": "^1.85.0" },
-  "categories": ["Testing", "Other"],
-  "keywords": ["qa", "testing", "flutter", "php", "nodejs", "ai", "test cases", "gemini", "test generation"],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Testing",
+    "Other"
+  ],
+  "keywords": [
+    "qa",
+    "testing",
+    "flutter",
+    "php",
+    "nodejs",
+    "ai",
+    "test cases",
+    "gemini",
+    "test generation"
+  ],
   "icon": "icon.png",
   "license": "MIT",
   "repository": {
@@ -21,7 +36,9 @@
     "color": "#0F172A",
     "theme": "dark"
   },
-  "activationEvents": ["onStartupFinished"],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./extension.js",
   "contributes": {
     "viewsContainers": {
@@ -112,6 +129,6 @@
     "package": "vsce package --allow-missing-repository --skip-license --allow-package-all-secrets"
   },
   "devDependencies": {
-    "@vscode/vsce": "^3.6.1"
+    "@vscode/vsce": "^2.32.0"
   }
 }

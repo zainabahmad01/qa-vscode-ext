@@ -1,0 +1,8 @@
+# Dependencies
+node_modules/
+
+# Packaged extension files
+*.vsix
+
+# npm lock (optional – remove this line if you want to track it)
+package-lock.json
