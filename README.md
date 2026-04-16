@@ -18,6 +18,9 @@ Powered by Google Gemini (free tier). Each user provides their own API key — n
 - **Offline result viewing** — previously saved results can be opened without any internet connection or running backend
 - **Data sharing** — export any saved result as a portable `.qa.json` file and import results shared by teammates
 - **Secure API key storage** — your Gemini key is stored in VS Code's encrypted secret store, never in plain settings
+- **Team Notes tab** — a dedicated, searchable notes tab for capturing interview prep notes and QA insights, visible to the whole team
+- **Note search** — instantly filter notes by keyword across all saved entries
+- **Team task visibility** — task updates are surfaced in a shared view so every team member stays in sync
 
 ---
 
@@ -103,6 +106,8 @@ Share QA results with your team without any server:
 | `QA: Set / Change Gemini API Key` | Update your saved API key |
 | `QA: Clear Saved API Key` | Remove your stored key |
 | `QA: Open Settings` | Configure server URL and model |
+| `QA: Open Notes` | Open the Notes tab directly |
+| `QA: New Note` | Create a new note in the Notes tab |
 
 ---
 
@@ -116,8 +121,32 @@ The extension opens a dark-themed side panel with:
 - **Predicted Failures** — likely bugs with root cause and trigger conditions
 - **Code Issues** — frontend and backend code smells
 - **Coverage Report** — functional / negative / edge / UI / API
+- **Notes** — team-shared searchable notes for interview prep and QA reference material (see below)
 
 All sections are collapsible. Metric cards at the top show total, high, medium, and low priority counts at a glance.
+
+---
+
+## Team Notes Tab
+
+The **Notes** tab is a shared, searchable workspace for capturing interview preparation notes, QA insights, and team knowledge — accessible to all authorized team members.
+
+### How to use Notes
+
+1. Open the QA Super Agent panel (`Cmd+Shift+Q` / `Ctrl+Shift+Q`)
+2. Click the **Notes** tab at the top of the panel
+3. Click **+ New Note** to create a note — add a title, tags, and content
+4. Use the **search bar** at the top of the Notes tab to instantly filter notes by keyword or tag
+5. Notes are saved locally and can be shared with teammates via the standard **Export / Import** flow (`.qa.json`)
+
+### Notes features
+
+| Feature | Description |
+|---|---|
+| Full-text search | Filter notes by any keyword across title and content |
+| Tags | Attach tags (e.g. `interview`, `edge-case`, `flutter`) for grouped filtering |
+| Team visibility | Exported note files can be imported by any teammate |
+| Offline access | All notes are stored locally and readable without a backend |
 
 ---
 
