@@ -24,6 +24,24 @@
   "activationEvents": ["onStartupFinished"],
   "main": "./extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "qa-super-agent",
+          "title": "QA Super Agent",
+          "icon": "icon.png"
+        }
+      ]
+    },
+    "views": {
+      "qa-super-agent": [
+        {
+          "id": "qaAgent.sidebarView",
+          "name": "QA Super Agent",
+          "type": "webview"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "qa.generateTestCases",

@@ -38,6 +38,18 @@ Use QA Super Agent to run and iterate on an existing company codebase locally:
 
 ---
 
+## Sidebar
+
+After installing, the **QA Super Agent icon** (shield logo) appears in VS Code's Activity Bar on the left. Click it to open the sidebar panel, which gives you one-click access to:
+
+- **Generate Test Cases** — run an analysis instantly
+- **Get Free Gemini API Key** — opens [aistudio.google.com/apikey](https://aistudio.google.com/apikey) directly in your browser so you can create a key in seconds (free, no billing required)
+- **Set / Change API Key** — paste and securely store your key
+- **View Saved Results** — browse past analyses
+- **Show Tutorial** — reopen the guided onboarding
+
+---
+
 ## Quick Start
 
 ### 1. Install the extension
@@ -54,10 +66,13 @@ pip install -r requirements.txt
 uvicorn api:app --reload --port 8000
 ```
 
-### 3. Set your free Gemini API key
-Get a free key at [aistudio.google.com/apikey](https://aistudio.google.com/apikey) — no billing needed.
+### 3. Get and set your free Gemini API key
+1. Click the **QA Super Agent icon** in the Activity Bar to open the sidebar
+2. Click **"Get Free Gemini API Key ↗"** — this opens [aistudio.google.com/apikey](https://aistudio.google.com/apikey) in your browser
+3. Sign in with your Google account, click **"Create API key"**, and copy it (starts with `AIzaSy…`)
+4. Back in VS Code, click **"Set / Change API Key"** in the sidebar and paste the key
 
-On first use, the extension will prompt you to paste it. It is stored securely and never leaves your machine.
+Your key is stored in VS Code's encrypted secret store and never leaves your machine.
 
 ### 4. Run QA analysis
 - **Keyboard shortcut**: `Cmd+Shift+Q` (Mac) / `Ctrl+Shift+Q` (Windows/Linux)

@@ -89,15 +89,42 @@ async function promptForKey(context) {
   return key.trim();
 }
 
+// ── Sidebar WebviewView Provider ──────────────────────────────────────────────
+
+class QASidebarProvider {
+  constructor(context) {
+    this._context = context;
+  }
+
+  resolveWebviewView(webviewView) {
+    webviewView.webview.options = { enableScripts: true, retainContextWhenHidden: true };
+    webviewView.webview.html = sidebarHtml();
+
+    webviewView.webview.onDidReceiveMessage(async (msg) => {
+      switch (msg.command) {
+        case 'generate':
+          vscode.commands.executeCommand('qa.generateTestCases');
+          break;
+        case 'setKey':
+          vscode.commands.executeCommand('qa.changeApiKey');
+          break;
+        case 'getKey':
+          vscode.env.openExternal(vscode.Uri.parse('https://aistudio.google.com/apikey'));
+          break;
+        case 'tutorial':
+          vscode.commands.executeCommand('qa.showTutorial');
+          break;
+        case 'savedResults':
+          vscode.commands.executeCommand('qa.viewSavedResults');
+          break;
+      }
+    }, undefined, this._context.subscriptions);
+  }
+}
+
 // ── Extension activate ────────────────────────────────────────────────────────
 
 function activate(context) {
-  const hasSeenTutorial = context.globalState.get('qaAgent.tutorialSeen', false);
-  if (!hasSeenTutorial) {
-    showTutorialPanel(context);
-    context.globalState.update('qaAgent.tutorialSeen', true);
-  }
-
   const generateCmd = vscode.commands.registerCommand('qa.generateTestCases', async () => {
     const config = vscode.workspace.getConfiguration('qaAgent');
     const serverUrl = config.get('serverUrl', 'http://localhost:8000');
@@ -218,9 +245,14 @@ function activate(context) {
     vscode.window.showInformationMessage(`QA Super Agent: Imported "${imported.label}" successfully.`);
   });
 
+  const sidebarProvider = vscode.window.registerWebviewViewProvider(
+    'qaAgent.sidebarView',
+    new QASidebarProvider(context)
+  );
+
   context.subscriptions.push(
     generateCmd, tutorialCmd, settingsCmd, changeKeyCmd, clearKeyCmd,
-    savedResultsCmd, exportCmd, importCmd
+    savedResultsCmd, exportCmd, importCmd, sidebarProvider
   );
 }
 
@@ -573,6 +605,153 @@ const BASE_STYLE = `
 
   .empty { font-size:12px; color:#64748b; font-style:italic; }
 </style>`;
+
+// ── Sidebar HTML ──────────────────────────────────────────────────────────────
+
+function sidebarHtml() {
+  return `<!DOCTYPE html><html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: var(--vscode-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+        font-size: 13px;
+        background: #0d0d14;
+        color: #e2e8f0;
+        padding: 0;
+        line-height: 1.5;
+      }
+
+      .sidebar-header {
+        background: linear-gradient(135deg, #0f0c29 0%, #1a0733 50%, #0f2460 100%);
+        border-bottom: 1px solid rgba(124,58,237,.35);
+        padding: 16px 14px 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sidebar-header svg { flex-shrink: 0; filter: drop-shadow(0 0 8px rgba(124,58,237,.7)); }
+      .sidebar-header h1 { font-size: 13px; font-weight: 800; color: #fff; letter-spacing: .02em; }
+      .sidebar-header p  { font-size: 10px; color: rgba(255,255,255,.55); margin-top: 2px; }
+
+      .section-label {
+        font-size: 10px; font-weight: 700; letter-spacing: .08em;
+        text-transform: uppercase; color: #64748b;
+        padding: 14px 14px 6px;
+      }
+
+      .btn {
+        display: flex; align-items: center; gap: 10px;
+        width: calc(100% - 28px); margin: 0 14px 8px;
+        padding: 9px 13px; border-radius: 8px;
+        border: none; cursor: pointer;
+        font-size: 12px; font-weight: 600;
+        transition: all .15s; text-align: left;
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #7c3aed, #3b82f6);
+        color: #fff;
+        box-shadow: 0 3px 12px rgba(124,58,237,.3);
+      }
+      .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+
+      .btn-secondary {
+        background: rgba(255,255,255,.06);
+        color: #94a3b8;
+        border: 1px solid rgba(255,255,255,.09);
+      }
+      .btn-secondary:hover { background: rgba(255,255,255,.11); color: #e2e8f0; }
+
+      .btn-gemini {
+        background: rgba(52,211,153,.1);
+        color: #34d399;
+        border: 1px solid rgba(52,211,153,.25);
+      }
+      .btn-gemini:hover { background: rgba(52,211,153,.2); }
+
+      .btn-icon { font-size: 15px; flex-shrink: 0; }
+
+      .divider {
+        height: 1px;
+        background: rgba(255,255,255,.06);
+        margin: 6px 14px 10px;
+      }
+
+      .key-box {
+        margin: 0 14px 14px;
+        padding: 11px 13px;
+        border-radius: 8px;
+        background: rgba(124,58,237,.08);
+        border: 1px solid rgba(124,58,237,.2);
+        font-size: 11px;
+        color: #c4b5fd;
+        line-height: 1.6;
+      }
+      .key-box strong { color: #e2e8f0; }
+      .key-box .arrow { color: #7c3aed; font-weight: 700; }
+    </style>
+  </head>
+  <body>
+
+    <div class="sidebar-header">
+      ${LOGO_SVG}
+      <div>
+        <h1>QA Super Agent</h1>
+        <p>AI-powered QA for Flutter · PHP · Node</p>
+      </div>
+    </div>
+
+    <div class="section-label">Actions</div>
+
+    <button class="btn btn-primary" onclick="send('generate')">
+      <span class="btn-icon">⚡</span>
+      <span>Generate Test Cases</span>
+    </button>
+
+    <div class="section-label">Gemini API Key</div>
+
+    <div class="key-box">
+      <strong>Need a free key?</strong><br>
+      Click below to open Google AI Studio — sign in and hit <span class="arrow">Create API key</span>.
+      It's free, no billing required.
+    </div>
+
+    <button class="btn btn-gemini" onclick="send('getKey')">
+      <span class="btn-icon">🔑</span>
+      <span>Get Free Gemini API Key ↗</span>
+    </button>
+
+    <button class="btn btn-secondary" onclick="send('setKey')">
+      <span class="btn-icon">✏️</span>
+      <span>Set / Change API Key</span>
+    </button>
+
+    <div class="divider"></div>
+
+    <div class="section-label">More</div>
+
+    <button class="btn btn-secondary" onclick="send('savedResults')">
+      <span class="btn-icon">📂</span>
+      <span>View Saved Results</span>
+    </button>
+
+    <button class="btn btn-secondary" onclick="send('tutorial')">
+      <span class="btn-icon">📖</span>
+      <span>Show Tutorial</span>
+    </button>
+
+    <script>
+      const vscodeApi = typeof acquireVsCodeApi !== 'undefined' ? acquireVsCodeApi() : null;
+      function send(command) {
+        if (vscodeApi) vscodeApi.postMessage({ command });
+      }
+    </script>
+  </body>
+  </html>`;
+}
 
 // ── Loading HTML ──────────────────────────────────────────────────────────────
 
